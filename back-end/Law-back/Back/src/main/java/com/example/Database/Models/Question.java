@@ -1,54 +1,77 @@
 package com.example.Database.Models;
 
-import com.example.Database.Models.Startup;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
+import java.util.Set;
 
 @Entity
+@Table(name = "Questions")
 public class Question {
-    @Id //айди вопросам тоже наверное нужно
-    //@GenetateValue
-    private Long id;
-    private String content;
 
-    //@ManyToOne
-    //@JoinColumn(name='startup_id')
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "startup_id", referencedColumnName = "id")
     private Startup startup;
 
-    private List<Answer> answers = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
 
-    public Long getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<QuestionTag> questionTags;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(name = "Title", nullable = false, length = 255)
+    private String title;
 
-    public String getContent() {
-        return content;
-    }
+    @Column(name = "Description", length = 1000)
+    private String description;
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+    @Column(name = "Created_At", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
 
-    public Startup getStartup() {
-        return startup;
-    }
+    // Getters and Setters
+    public Long getId() { return id; }
 
-    public void setStartup(Startup startup) {
-        this.startup = startup;
-    }
+    public void setId(Long id) { this.id = id; }
 
-    public List<Answer> getAnswers() {
-        return answers;
-    }
+    public Startup getStartup() { return startup; }
 
-    public void setAnswers(List<Answer> answers) {
-        this.answers = answers;
+    public void setStartup(Startup startup) { this.startup = startup; }
+
+    public Category getCategory() { return category; }
+
+    public void setCategory(Category category) { this.category = category; }
+
+    public Set<QuestionTag> getQuestionTags() { return questionTags; }
+
+    public void setQuestionTags(Set<QuestionTag> questionTags) { this.questionTags = questionTags; }
+
+    public String getTitle() { return title; }
+
+    public void setTitle(String title) { this.title = title; }
+
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public Date getCreatedAt() { return createdAt; }
+
+    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", startup=" + (startup != null ? startup.getId() : null) +
+                ", category=" + (category != null ? category.getId() : null) +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

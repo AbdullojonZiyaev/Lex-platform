@@ -1,43 +1,49 @@
 package com.example.Database.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "Startups")
 public class Startup {
+
     @Id
-    //@GenerateValue??
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String something;
 
-    //@OneToMany??
-    private List<Question> questions = new ArrayList<>();
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
-    public Long getStartupId() {
-        return id;
-    }
+    @Column(name = "Company_Name", nullable = false, length = 100)
+    private String companyName;
 
-    public void setStartupId(Long id) {
-        this.id = id;
-    }
+    @Column(name = "Description", length = 255)
+    private String description;
 
-    public String getStartupName() {
-        return name;
-    }
+    // Getters and Setters
+    public Long getId() { return id; }
 
-    public void setStartupName(String name) {
-        this.name = name;
-    }
+    public void setId(Long id) { this.id = id; }
 
-    public List<Question> getQuestions() {
-        return questions;
-    }
+    public User getUser() { return user; }
 
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
+    public void setUser(User user) { this.user = user; }
+
+    public String getCompanyName() { return companyName; }
+
+    public void setCompanyName(String companyName) { this.companyName = companyName; }
+
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    @Override
+    public String toString() {
+        return "Startup{" +
+                "id=" + id +
+                ", companyName='" + companyName + '\'' +
+                ", description='" + description + '\'' +
+                ", user=" + (user != null ? user.getId() : null) +
+                '}';
     }
 }
