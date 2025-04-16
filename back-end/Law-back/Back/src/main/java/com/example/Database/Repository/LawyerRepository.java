@@ -11,6 +11,4 @@ import java.util.Optional;
 @Repository
 public interface LawyerRepository extends JpaRepository<Lawyer, Long> {
     List<Lawyer> findBySpecialization(String specialization);
-    Optional<Lawyer> findById(Long id);
-    void deleteById(Long id);
 }

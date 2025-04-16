@@ -11,6 +11,4 @@ import java.util.Optional;
 @Repository
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
     List<Answer> findByQuestionId(Long questionId);
-    Optional<Answer> findById(Long id);
-    void deleteById(Long id);
 }

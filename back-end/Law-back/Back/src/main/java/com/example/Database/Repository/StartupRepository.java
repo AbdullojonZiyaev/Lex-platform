@@ -11,6 +11,4 @@ import java.util.Optional;
 @Repository
 public interface StartupRepository extends JpaRepository<Startup, Long> {
     List<Startup> findByCompanyNameLike(String companyName);
-    Optional<Startup> findById(Long id);
-    void deleteById(Long id);
 }

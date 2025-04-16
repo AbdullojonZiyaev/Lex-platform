@@ -11,6 +11,4 @@ import java.util.Optional;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findByNameLike(String name);
-    Optional<Category> findById(Long id);
-    void deleteById(Long id);
 }
