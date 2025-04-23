@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ask a Legal Question</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f1f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    form {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      width: 400px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin: 0.75rem 0 0.25rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.6rem;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005299;
+    }
+  </style>
+</head>
+<body>
+    <nav style="background:#003366; color:white; padding:1rem; display:flex; justify-content:space-between;">
+        <div><strong>LawStart</strong></div>
+        <div>
+          <a href="Forum.html" style="color:white; margin-right:1rem;">Forum</a>
+          <a href="AskQuestion.html" style="color:white; margin-right:1rem;">Ask Question</a>
+          <a href="AnswerQuestion.html" style="color:white; margin-right:1rem;">Answer Questions</a>
+          <a href="Profile.html" style="color:white;">Profile</a>
+        </div>
+      </nav>
+      
+  <form action="/submit-question" method="POST">
+    <h2>Ask a Legal Question</h2>
+    <label for="title">Question Title:</label>
+    <input type="text" name="title" id="title" required />
+
+    <label for="details">Details:</label>
+    <textarea name="details" id="details" rows="6" required></textarea>
+
+    <button type="submit">Submit Question</button>
+  </form>
+</body>
+</html>
