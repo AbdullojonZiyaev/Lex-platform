@@ -28,6 +28,8 @@ const LawyerDashboard = () => {
             <p style={{ marginBottom: '0.75rem', fontStyle: 'italic' }}>{ans.question.description}</p>
             <p><strong>A:</strong> {ans.content}</p>
             <p style={{ color: 'gray' }}>Asked by: {ans.question.startup.companyName}</p>
+            <p style={{ color: 'gray' }}>Category: {ans.question.category}</p>
+            <p style={{ color: 'gray' }}>Tags: {ans.question.tags + " "}</p>
           </div>
         ))}
 

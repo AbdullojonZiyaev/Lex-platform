@@ -98,6 +98,9 @@ const StartupDashboard = () => {
           }}>
             <h3>{q.title}</h3>
             <p>{q.description}</p>
+            <p>Category: {q.category}</p>
+            <p>Tags: {q.tags + " "}</p>
+
             <button onClick={() => checkAnswers(q.id)}>Check Answers</button>
             {answersMap[q.id] && (
               <div style={{ marginTop: '0.75rem' }}>

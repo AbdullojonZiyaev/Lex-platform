@@ -2,6 +2,7 @@ package com.example.Database.Service;
 
 import com.example.Database.Models.Category;
 import com.example.Database.Models.Question;
+import com.example.Database.Models.Tag;
 import com.example.Database.Repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,16 @@ public class QuestionService {
         return questionRepository.findAll();
     }
 
-    public List<Question> getQuestionsByTitle(String title) {
-        return questionRepository.findByTitleContainingIgnoreCase(title);
-    }
-
     public List<Question> getQuestionsByCategory(Category category) {
         return questionRepository.findByCategory(category);
+    }
+
+    public List<Question> getQuestionsByCategoryAndTags(Category category, Tag tag) {
+        return questionRepository.findByCategoryAndTagsContaining(category, tag);
+    }
+
+    public List<Question> getQuestionsByTags(Tag tag) {
+        return questionRepository.findByTags(tag);
     }
 
     public List<Question> getQuestionsByStartup(Long startupId) {

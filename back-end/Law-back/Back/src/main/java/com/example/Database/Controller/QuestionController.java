@@ -3,6 +3,7 @@ package com.example.Database.Controller;
 import com.example.Database.Models.Category;
 import com.example.Database.Models.Question;
 import com.example.Database.Models.Startup;
+import com.example.Database.Models.Tag;
 import com.example.Database.Repository.StartupRepository;
 import com.example.Database.Service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,16 +39,20 @@ public class QuestionController {
         return new ResponseEntity<>(questions, HttpStatus.OK);
     }
 
-    @GetMapping("/search/title")
-    public ResponseEntity<List<Question>> getQuestionsByTitle(@RequestParam String title) {
-        List<Question> questions = questionService.getQuestionsByTitle(title);
-        return new ResponseEntity<>(questions, HttpStatus.OK);
-    }
+    @GetMapping("/filter")
+    public List<Question> getByCategoryAndTag(
+            @RequestParam(required = false) Category category,
+            @RequestParam(required = false) Tag tag) {
 
-    @GetMapping("/category/{category}")
-    public ResponseEntity<List<Question>> getQuestionsByCategory(@PathVariable Category category) {
-        List<Question> questions = questionService.getQuestionsByCategory(category);
-        return new ResponseEntity<>(questions, HttpStatus.OK);
+        if (category != null && tag != null) {
+            return questionService.getQuestionsByCategoryAndTags(category, tag);
+        } else if (category != null) {
+            return questionService.getQuestionsByCategory(category);
+        } else if (tag != null) {
+            return questionService.getQuestionsByTags(tag);
+        } else {
+            return questionService.getAllQuestions();
+        }
     }
 
     @GetMapping("/startup/{startupId}")

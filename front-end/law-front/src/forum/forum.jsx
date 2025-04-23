@@ -6,14 +6,28 @@ const Forum = () => {
   const [showAnswerModal, setShowAnswerModal] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [answerText, setAnswerText] = useState("");
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedTag, setSelectedTag] = useState("");
+
   const userType = localStorage.getItem("userType");
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/questions')
+    let url = 'http://localhost:8080/api/questions';
+
+    if (selectedCategory || selectedTag) {
+      const params = new URLSearchParams();
+      if (selectedCategory) params.append("category", selectedCategory);
+      if (selectedTag) params.append("tag", selectedTag);
+      url = `http://localhost:8080/api/questions/filter?${params.toString()}`;
+    }
+
+    fetch(url)
       .then(res => res.json())
       .then(data => setQuestions(data))
       .catch(err => console.error("Failed to fetch questions:", err));
-  }, []);
+  }, [selectedCategory, selectedTag]);
+
 
   const checkAnswers = (questionId) => {
     if (!answersMap[questionId]) {
@@ -54,15 +68,52 @@ const Forum = () => {
   };
 
   return (
-    <div className="forum">
+    <div className="forum" style={{ padding: "2rem" }}>
       <h2>Forum</h2>
+
+      {/* Filter UI */}
+      <div style={{ marginBottom: "1.5rem" }}>
+        <label>Category: </label>
+        <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+          <option value="">All</option>
+          <option value="FINANCE">Finance</option>
+          <option value="EMPLOYMENT">Employment</option>
+          <option value="COPYRIGHT">Copyright</option>
+          <option value="BUSINESS">Business</option>
+          {/* Add your categories */}
+        </select>
+
+        <label style={{ marginLeft: "1rem" }}>Tag: </label>
+        <select value={selectedTag} onChange={(e) => setSelectedTag(e.target.value)}>
+          <option value="">All</option>
+          <option value="TAX">Tax</option>
+          <option value="HIRING">Hiring</option>
+          <option value="TRADEMARK">Trademark</option>
+          <option value="INCORPORATION">Incorporation</option>
+          {/* Add your tags */}
+        </select>
+
+        <button
+          onClick={() => {
+            setSelectedCategory("");
+            setSelectedTag("");
+          }}
+          style={{ marginLeft: "1rem" }}
+        >
+          Clear Filters
+        </button>
+      </div>
+
+      {/* Questions List */}
       <ul>
         {questions.map(q => (
           <li key={q.id} style={{ background: '#f9f9f9', padding: '1rem', marginBottom: '1rem', borderRadius: '8px' }}>
             <h3>{q.title}</h3>
             <p>{q.description}</p>
             <p>By: {q.startup.companyName}</p>
-           <p>{new Date(q.createdAt).toLocaleString()}</p>
+            <p>Category: {q.category}</p>
+            <p>Tags: {q.tags + " "}</p>
+            <p>{new Date(q.createdAt).toLocaleString()}</p>
             <button onClick={() => checkAnswers(q.id)}>Check Answers</button>
             {userType === 'lawyer' && (
               <button onClick={() => openAnswerModal(q)} style={{ marginLeft: '1rem' }}>
@@ -86,6 +137,11 @@ const Forum = () => {
           </li>
         ))}
       </ul>
+        {questions.length === 0 && (
+          <p style={{ fontStyle: "italic", color: "gray", marginTop: "1rem" }}>
+            No questions found with the current filters.
+          </p>
+        )}
 
       {/* Answer Modal */}
       {showAnswerModal && selectedQuestion && (

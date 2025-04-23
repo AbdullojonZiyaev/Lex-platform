@@ -5,7 +5,6 @@ import com.example.Database.Models.Lawyer;
 import com.example.Database.Models.Question;
 import com.example.Database.Repository.LawyerRepository;
 import com.example.Database.Repository.QuestionRepository;
-import com.example.Database.Repository.StartupRepository;
 import com.example.Database.Service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
