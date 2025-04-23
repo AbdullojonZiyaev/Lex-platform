@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface StartupRepository extends JpaRepository<Startup, Long> {
     List<Startup> findByCompanyNameLike(String companyName);
+    Optional<Startup> findByUsername(String username);
 }

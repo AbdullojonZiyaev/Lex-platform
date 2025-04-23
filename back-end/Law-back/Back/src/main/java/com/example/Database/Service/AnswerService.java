@@ -20,7 +20,13 @@ public class AnswerService {
         return answerRepository.findById(id);
 
     }
+    public List<Answer> getAnswerByQuestionId(Long id) {
+        return answerRepository.findByQuestionId(id);
+    }
 
+    public List<Answer> getAnswerByLawyerId(Long id) {
+        return answerRepository.findByLawyerId(id);
+    }
     public List<Answer> getAllAnswers() {
         return answerRepository.findAll();
     }
