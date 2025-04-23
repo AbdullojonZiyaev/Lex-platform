@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,9 +16,9 @@ public class AnswerService {
     @Autowired
     private AnswerRepository answerRepository;
 
-    public Answer getAnswerById(Long id) {
-        Optional<Answer> answer = answerRepository.findById(id);
-        return answer.orElse(null);
+    public Optional<Answer> getAnswerById(Long id) {
+        return answerRepository.findById(id);
+
     }
 
     public List<Answer> getAllAnswers() {
@@ -26,19 +27,29 @@ public class AnswerService {
 
     @Transactional
     public Answer createAnswer(Answer answer) {
+        // Ensure createdAt is always set when creating a new Answer
+        if (answer.getCreatedAt() == null) {
+            answer.setCreatedAt(LocalDateTime.now());
+        }
         return answerRepository.save(answer);
     }
 
     @Transactional
     public Answer updateAnswer(Long id, Answer updatedAnswer) {
-        Optional<Answer> existingAnswerOptional = answerRepository.findById(id);
-        if (existingAnswerOptional.isPresent()) {
-            Answer existingAnswer = existingAnswerOptional.get();
-            existingAnswer.setContent(updatedAnswer.getContent());
-            existingAnswer.setCreatedAt(updatedAnswer.getCreatedAt());
-            return answerRepository.save(existingAnswer);
+        Answer existingAnswer = answerRepository.findById(id).orElse(null);
+        if (existingAnswer == null) {
+            return null;  // Return null if the answer with the given id is not found
         }
-        return null;
+
+        // Update fields dynamically if they are not null
+        if (updatedAnswer.getContent() != null) {
+            existingAnswer.setContent(updatedAnswer.getContent());
+        }
+        if (updatedAnswer.getCreatedAt() != null) {
+            existingAnswer.setCreatedAt(updatedAnswer.getCreatedAt());
+        }
+        // Save and return the updated answer
+        return answerRepository.save(existingAnswer);
     }
 
     @Transactional
@@ -46,3 +57,4 @@ public class AnswerService {
         answerRepository.deleteById(id);
     }
 }
+

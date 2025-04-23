@@ -17,12 +17,15 @@ public class Question {
     @JoinColumn(name = "startup_id", referencedColumnName = "id")
     private Startup startup;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Category", nullable = false)
     private Category category;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<QuestionTag> questionTags;
+    @ElementCollection(targetClass = Tag.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "question_tags", joinColumns = @JoinColumn(name = "question_id"))
+    @Column(name = "tag")
+    private Set<Tag> tags;
 
     @Column(name = "Title", nullable = false, length = 255)
     private String title;
@@ -35,33 +38,61 @@ public class Question {
     private Date createdAt;
 
     // Getters and Setters
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Startup getStartup() { return startup; }
+    public Startup getStartup() {
+        return startup;
+    }
 
-    public void setStartup(Startup startup) { this.startup = startup; }
+    public void setStartup(Startup startup) {
+        this.startup = startup;
+    }
 
-    public Category getCategory() { return category; }
+    public Category getCategory() {
+        return category;
+    }
 
-    public void setCategory(Category category) { this.category = category; }
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
-    public Set<QuestionTag> getQuestionTags() { return questionTags; }
+    public Set<Tag> getTags() {
+        return tags;
+    }
 
-    public void setQuestionTags(Set<QuestionTag> questionTags) { this.questionTags = questionTags; }
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
 
-    public String getTitle() { return title; }
+    public String getTitle() {
+        return title;
+    }
 
-    public void setTitle(String title) { this.title = title; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public Date getCreatedAt() { return createdAt; }
+    public Date getCreatedAt() {
+        return createdAt;
+    }
 
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 
     @Override
     public String toString() {
@@ -69,9 +100,11 @@ public class Question {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
+                ", category=" + category +
+                ", tags=" + tags +
                 ", startup=" + (startup != null ? startup.getId() : null) +
-                ", category=" + (category != null ? category.getId() : null) +
                 ", createdAt=" + createdAt +
                 '}';
     }
 }
+

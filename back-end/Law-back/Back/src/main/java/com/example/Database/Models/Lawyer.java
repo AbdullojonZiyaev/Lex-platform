@@ -4,15 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Lawyers")
-public class Lawyer {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+public class Lawyer extends User {
 
     @Column(name = "Specialization", length = 100)
     private String specialization;
@@ -21,29 +13,30 @@ public class Lawyer {
     private int experienceYears;
 
     // Getters and Setters
-    public Long getId() { return id; }
+    public String getSpecialization() {
+        return specialization;
+    }
 
-    public void setId(Long id) { this.id = id; }
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
+    }
 
-    public User getUser() { return user; }
+    public int getExperienceYears() {
+        return experienceYears;
+    }
 
-    public void setUser(User user) { this.user = user; }
-
-    public String getSpecialization() { return specialization; }
-
-    public void setSpecialization(String specialization) { this.specialization = specialization; }
-
-    public int getExperienceYears() { return experienceYears; }
-
-    public void setExperienceYears(int experienceYears) { this.experienceYears = experienceYears; }
+    public void setExperienceYears(int experienceYears) {
+        this.experienceYears = experienceYears;
+    }
 
     @Override
     public String toString() {
         return "Lawyer{" +
                 "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
                 ", specialization='" + specialization + '\'' +
                 ", experienceYears=" + experienceYears +
-                ", user=" + (user != null ? user.getId() : null) +
                 '}';
     }
 }

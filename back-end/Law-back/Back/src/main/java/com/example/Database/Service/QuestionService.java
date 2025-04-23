@@ -1,5 +1,6 @@
 package com.example.Database.Service;
 
+import com.example.Database.Models.Category;
 import com.example.Database.Models.Question;
 import com.example.Database.Repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,7 @@ public class QuestionService {
     private QuestionRepository questionRepository;
 
     public Question getQuestionById(Long id) {
-        Optional<Question> question = questionRepository.findById(id);
-        return question.orElse(null);
+        return questionRepository.findById(id).orElse(null);
     }
 
     public List<Question> getAllQuestions() {
@@ -25,11 +25,11 @@ public class QuestionService {
     }
 
     public List<Question> getQuestionsByTitle(String title) {
-        return questionRepository.findByTitleLike(title);
+        return questionRepository.findByTitleContainingIgnoreCase(title);
     }
 
-    public List<Question> getQuestionsByCategory(Long categoryId) {
-        return questionRepository.findByCategoryId(categoryId);
+    public List<Question> getQuestionsByCategory(Category category) {
+        return questionRepository.findByCategory(category);
     }
 
     public List<Question> getQuestionsByStartup(Long startupId) {
@@ -43,26 +43,21 @@ public class QuestionService {
 
     @Transactional
     public Question updateQuestion(Long id, Question updatedQuestion) {
-        Optional<Question> existingQuestionOptional = questionRepository.findById(id);
-        if (existingQuestionOptional.isPresent()) {
-            Question existingQuestion = existingQuestionOptional.get();
-
-            // Update the basic fields
+        return questionRepository.findById(id).map(existingQuestion -> {
             existingQuestion.setTitle(updatedQuestion.getTitle());
             existingQuestion.setDescription(updatedQuestion.getDescription());
 
-            // Update the tags if provided
-            if (updatedQuestion.getQuestionTags() != null && !updatedQuestion.getQuestionTags().isEmpty()) {
-                // Clear existing tags and add new ones
-                existingQuestion.setQuestionTags(updatedQuestion.getQuestionTags());
+            if (updatedQuestion.getTags() != null && !updatedQuestion.getTags().isEmpty()) {
+                existingQuestion.setTags(updatedQuestion.getTags());
             }
 
-            // Save the updated question
-            return questionRepository.save(existingQuestion);
-        }
-        return null;
-    }
+            if (updatedQuestion.getCategory() != null) {
+                existingQuestion.setCategory(updatedQuestion.getCategory());
+            }
 
+            return questionRepository.save(existingQuestion);
+        }).orElse(null);
+    }
 
     @Transactional
     public void deleteQuestion(Long id) {

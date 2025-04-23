@@ -1,6 +1,7 @@
 package com.example.Database.Repository;
 
 
+import com.example.Database.Models.Category;
 import com.example.Database.Models.Question;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
-    List<Question> findByTitleLike(String title);
-    List<Question> findByCategoryId(Long categoryId);
+    List<Question> findByTitleContainingIgnoreCase(String title);
+    List<Question> findByCategory(Category category);
     List<Question> findByStartupId(Long startupId);
 }

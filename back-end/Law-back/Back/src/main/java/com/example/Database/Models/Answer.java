@@ -1,8 +1,7 @@
 package com.example.Database.Models;
 
 import jakarta.persistence.*;
-
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Answers")
@@ -12,20 +11,19 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "lawyer_id", referencedColumnName = "id")
     private Lawyer lawyer;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "question_id", referencedColumnName = "id")
-    private Question question;
+    private Question question; // Corrected reference to Question entity
 
     @Column(name = "Content", nullable = false, length = 1000)
     private String content;
 
     @Column(name = "Created_At", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -44,9 +42,9 @@ public class Answer {
 
     public void setContent(String content) { this.content = content; }
 
-    public Date getCreatedAt() { return createdAt; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
 
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     @Override
     public String toString() {

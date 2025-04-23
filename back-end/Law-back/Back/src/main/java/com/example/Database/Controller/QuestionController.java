@@ -1,5 +1,6 @@
 package com.example.Database.Controller;
 
+import com.example.Database.Models.Category;
 import com.example.Database.Models.Question;
 import com.example.Database.Service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +38,9 @@ public class QuestionController {
         return new ResponseEntity<>(questions, HttpStatus.OK);
     }
 
-    @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<Question>> getQuestionsByCategory(@PathVariable Long categoryId) {
-        List<Question> questions = questionService.getQuestionsByCategory(categoryId);
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<Question>> getQuestionsByCategory(@PathVariable Category category) {
+        List<Question> questions = questionService.getQuestionsByCategory(category);
         return new ResponseEntity<>(questions, HttpStatus.OK);
     }
 

@@ -3,21 +3,22 @@ package com.example.Database.Models;
 import jakarta.persistence.*;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "Users")
-public class User {
+public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     @Column(name = "Username", nullable = false, unique = true, length = 50)
-    private String username;
+    protected String username;
 
     @Column(name = "Email", nullable = false, unique = true, length = 100)
-    private String email;
+    protected String email;
 
     @Column(name = "Password", nullable = false, length = 100)
-    private String password;
+    protected String password;
 
     // Getters and Setters
     public Long getId() {

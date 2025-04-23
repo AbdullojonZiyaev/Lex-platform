@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/answers")
@@ -22,7 +23,7 @@ public class AnswerController {
 
     // Get an answer by its ID
     @GetMapping("/{id}")
-    public Answer getAnswerById(@PathVariable Long id) {
+    public Optional<Answer> getAnswerById(@PathVariable Long id) {
         return answerService.getAnswerById(id);
     }
 
