@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Questions")
@@ -32,6 +34,9 @@ public class Question {
 
     @Column(name = "Description", length = 1000)
     private String description;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answer> answers = new ArrayList<>();
 
     @Column(name = "Created_At", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)

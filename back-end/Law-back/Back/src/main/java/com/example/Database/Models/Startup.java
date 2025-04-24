@@ -2,6 +2,9 @@ package com.example.Database.Models;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "Startups")
 public class Startup extends User {
@@ -11,6 +14,9 @@ public class Startup extends User {
 
     @Column(name = "Description", length = 255)
     private String description;
+
+    @OneToMany(mappedBy = "startup", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Question> questions = new ArrayList<>();
 
     // Getters and Setters
     public String getCompanyName() {

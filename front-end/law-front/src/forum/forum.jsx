@@ -24,7 +24,11 @@ const Forum = () => {
 
     fetch(url)
       .then(res => res.json())
-      .then(data => setQuestions(data))
+      .then(data => {
+        // Sort by createdAt descending
+        const sorted = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setQuestions(sorted);
+      })
       .catch(err => console.error("Failed to fetch questions:", err));
   }, [selectedCategory, selectedTag]);
 
