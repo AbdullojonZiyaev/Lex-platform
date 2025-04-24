@@ -8,7 +8,6 @@ const StartupDashboard = () => {
   const [questions, setQuestions] = useState([]);
   const [answersMap, setAnswersMap] = useState({});
   const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate();
   const [newQuestion, setNewQuestion] = useState({
     title: "",
     description: "",
@@ -16,6 +15,10 @@ const StartupDashboard = () => {
     tags: []
   });
 
+  const [selectedLawyer, setSelectedLawyer] = useState(null);
+  const [showLawyerModal, setShowLawyerModal] = useState(false);
+
+  const navigate = useNavigate();
   const userId = localStorage.getItem("id");
 
   useEffect(() => {
@@ -36,6 +39,17 @@ const StartupDashboard = () => {
     }
   };
 
+  const viewLawyerInfo = async (lawyerId) => {
+    try {
+      const res = await fetch(`http://localhost:8080/lawyers/${lawyerId}`);
+      const data = await res.json();
+      setSelectedLawyer(data);
+      setShowLawyerModal(true);
+    } catch (err) {
+      console.error("Failed to fetch lawyer info:", err);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewQuestion(prev => ({ ...prev, [name]: value }));
@@ -49,12 +63,8 @@ const StartupDashboard = () => {
     }));
   };
 
- const handleSubmitQuestion = async (e) => {
+  const handleSubmitQuestion = async (e) => {
     e.preventDefault();
-
-    const userId = localStorage.getItem("id");  // Retrieve userId at the start
-
-    // Construct the body without 'createdAt', as it will be set on the backend
     const body = {
       title: newQuestion.title,
       description: newQuestion.description,
@@ -68,21 +78,18 @@ const StartupDashboard = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),  // Pass the body correctly here
+      body: JSON.stringify(body),
     });
 
     if (res.ok) {
       setShowModal(false);
       setNewQuestion({ title: "", description: "", category: "FINANCE", tags: [] });
-
-      // Fetch updated list of questions after submitting a new one
       const updated = await fetch(`http://localhost:8080/api/questions/startup/${userId}`).then(r => r.json());
       setQuestions(updated);
     } else {
       alert("Failed to submit question.");
     }
- };
-
+  };
 
   return (
     <div className="dashboard">
@@ -111,7 +118,16 @@ const StartupDashboard = () => {
                     <div key={a.id} style={{ marginTop: '0.5rem' }}>
                       <em>{a.content}</em>
                       <p style={{ color: 'gray', fontSize: '0.9rem' }}>
-                        Answered by: {a.lawyer.username}
+                        Answered by:{" "}
+                        <button
+                          onClick={() => viewLawyerInfo(a.lawyer.id)}
+                          style={{
+                            background: "none", border: "none", color: "blue",
+                            textDecoration: "underline", cursor: "pointer", padding: 0
+                          }}
+                        >
+                          {a.lawyer.username}
+                        </button>
                       </p>
                     </div>
                   ))
@@ -121,9 +137,10 @@ const StartupDashboard = () => {
           </li>
         ))}
       </ul>
+
       <button onClick={() => setShowModal(true)}>Ask a Question</button>
 
-      {/* Modal */}
+      {/* Question Modal */}
       {showModal && (
         <div style={{
           position: 'fixed',
@@ -169,19 +186,19 @@ const StartupDashboard = () => {
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
-             <label style={{ display: 'block', marginBottom: '0.5rem' }}>
-               Select Tags (hold Ctrl or Cmd to select multiple):
-             </label>
-             <select
-               multiple
-               value={newQuestion.tags}
-               onChange={handleTagsChange}
-               style={{ width: '100%', height: '100px', marginBottom: '1rem' }}
-             >
-               {TAGS.map(tag => (
-                 <option key={tag} value={tag}>{tag}</option>
-               ))}
-             </select>
+              <label style={{ display: 'block', marginBottom: '0.5rem' }}>
+                Select Tags (hold Ctrl or Cmd to select multiple):
+              </label>
+              <select
+                multiple
+                value={newQuestion.tags}
+                onChange={handleTagsChange}
+                style={{ width: '100%', height: '100px', marginBottom: '1rem' }}
+              >
+                {TAGS.map(tag => (
+                  <option key={tag} value={tag}>{tag}</option>
+                ))}
+              </select>
 
               <button type="submit">Submit</button>
               <button type="button" onClick={() => setShowModal(false)} style={{ marginLeft: '1rem' }}>
@@ -191,20 +208,44 @@ const StartupDashboard = () => {
           </div>
         </div>
       )}
-  <button
-          onClick={() => navigate("/forum")}
-          style={{
-            marginTop: '2rem',
-            padding: '0.8rem 1.2rem',
-            backgroundColor: '#004080',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer'
-          }}
-        >
-          Go to Forum
-        </button>
+
+      {/* Lawyer Info Modal */}
+      {showLawyerModal && selectedLawyer && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: "rgba(0,0,0,0.5)", display: "flex",
+          alignItems: "center", justifyContent: "center", zIndex: 1100
+        }}>
+          <div style={{
+            background: "white", padding: "2rem", borderRadius: "12px",
+            width: "90%", maxWidth: "400px", boxShadow: "0 5px 15px rgba(0,0,0,0.3)"
+          }}>
+            <h3>Lawyer Info</h3>
+            <p><strong>Username:</strong> {selectedLawyer.username}</p>
+            <p><strong>Email:</strong> {selectedLawyer.email}</p>
+            <p><strong>Specialization:</strong> {selectedLawyer.specialization}</p>
+            <p><strong>Years of Experience:</strong> {selectedLawyer.experienceYears}</p>
+            <div style={{ textAlign: "right", marginTop: "1rem" }}>
+              <button onClick={() => setShowLawyerModal(false)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <button
+        onClick={() => navigate("/forum")}
+        style={{
+          marginTop: '2rem',
+          padding: '0.8rem 1.2rem',
+          backgroundColor: '#004080',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer'
+        }}
+      >
+        Go to Forum
+      </button>
     </div>
   );
 };
