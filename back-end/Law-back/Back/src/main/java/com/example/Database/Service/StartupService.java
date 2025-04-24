@@ -34,6 +34,8 @@ public class StartupService {
         Optional<Startup> existingStartupOptional = startupRepository.findById(id);
         if (existingStartupOptional.isPresent()) {
             Startup existingStartup = existingStartupOptional.get();
+            existingStartup.setUsername(updatedStartup.getUsername());
+            existingStartup.setEmail(updatedStartup.getEmail());
             existingStartup.setCompanyName(updatedStartup.getCompanyName());
             existingStartup.setDescription(updatedStartup.getDescription());
             return startupRepository.save(existingStartup);

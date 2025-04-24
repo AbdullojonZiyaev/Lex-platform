@@ -34,8 +34,9 @@ public class LawyerService {
         Optional<Lawyer> existingLawyerOptional = lawyerRepository.findById(id);
         if (existingLawyerOptional.isPresent()) {
             Lawyer existingLawyer = existingLawyerOptional.get();
+            existingLawyer.setUsername(updatedLawyer.getUsername());
+            existingLawyer.setEmail(updatedLawyer.getEmail());
             existingLawyer.setSpecialization(updatedLawyer.getSpecialization());
-            existingLawyer.setExperienceYears(updatedLawyer.getExperienceYears());
             return lawyerRepository.save(existingLawyer);
         }
         return null;

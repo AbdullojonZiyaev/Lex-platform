@@ -17,9 +17,17 @@ const StartupDashboard = () => {
 
   const [selectedLawyer, setSelectedLawyer] = useState(null);
   const [showLawyerModal, setShowLawyerModal] = useState(false);
+  const [startup, setStartup] = useState({ username: '', email: '', companyName: '', description: '' });
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   const navigate = useNavigate();
   const userId = localStorage.getItem("id");
+useEffect(() => {
+  fetch(`http://localhost:8080/startups/${userId}`)
+    .then(res => res.json())
+    .then(data => setStartup(data))
+    .catch(err => console.error("Failed to fetch startup info:", err));
+}, [userId]);
 
   useEffect(() => {
     fetch(`http://localhost:8080/api/questions/startup/${userId}`)
@@ -90,9 +98,71 @@ const StartupDashboard = () => {
       alert("Failed to submit question.");
     }
   };
+const handleDeleteProfile = () => {
+  const confirmDelete = window.confirm("Are you sure you want to delete your profile? This action cannot be undone.");
+  if (!confirmDelete) return;
+
+  fetch(`http://localhost:8080/startups/${userId}`, {
+    method: "DELETE",
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Failed to delete profile");
+      alert("Profile deleted. You will be logged out.");
+      localStorage.clear();
+      navigate("/login"); // Or wherever you want to go
+    })
+    .catch(err => console.error("Delete profile error:", err));
+};
+const handleUpdateProfile = () => {
+  fetch(`http://localhost:8080/startups/${userId}`, {
+    method: "PUT",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(startup)
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Failed to update profile");
+      alert("Profile updated successfully!");
+      setShowUpdateModal(false);
+    })
+    .catch(err => console.error("Update error:", err));
+};
 
   return (
     <div className="dashboard">
+        <div style={{ marginBottom: '1.5rem',
+            marginTop: '1.5rem'}}>
+          <span style={{ marginRight: '1rem', fontWeight: 'bold' }}>
+            Welcome, {startup.username || "Startup"}!
+          </span>
+          <button
+            onClick={() => setShowUpdateModal(true)}
+            style={{
+              marginRight: '0.5rem',
+              padding: '0.4rem 0.8rem',
+              backgroundColor: '#FFA500',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            Update Profile
+          </button>
+          <button
+            onClick={handleDeleteProfile}
+            style={{
+              padding: '0.4rem 0.8rem',
+              backgroundColor: '#D9534F',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            Delete Profile
+          </button>
+        </div>
+
       <h2>Your Questions</h2>
       <ul>
         {questions.map(q => (
@@ -208,6 +278,61 @@ const StartupDashboard = () => {
           </div>
         </div>
       )}
+{showUpdateModal && (
+  <>
+    <div onClick={() => setShowUpdateModal(false)} style={{
+      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+      backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 999
+    }} />
+    <div style={{
+      position: 'fixed',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      backgroundColor: '#fff',
+      padding: '2rem',
+      borderRadius: '8px',
+      boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
+      zIndex: 1000,
+      width: '320px'
+    }}>
+      <h3>Update Profile</h3>
+      <input value={startup.username} onChange={e => setStartup({ ...startup, username: e.target.value })} placeholder="Username" />
+      <input value={startup.email} onChange={e => setStartup({ ...startup, email: e.target.value })} placeholder="Email" />
+      <input value={startup.companyName} onChange={e => setStartup({ ...startup, companyName: e.target.value })} placeholder="Company Name" />
+      <textarea value={startup.description} onChange={e => setStartup({ ...startup, description: e.target.value })} placeholder="Description" />
+
+      <button
+        onClick={handleUpdateProfile}
+        style={{
+          marginTop: '1rem',
+          padding: '0.5rem 1rem',
+          backgroundColor: '#28a745',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}
+      >
+        Save Changes
+      </button>
+      <button
+        onClick={() => setShowUpdateModal(false)}
+        style={{
+          marginLeft: '0.5rem',
+          padding: '0.5rem 1rem',
+          backgroundColor: '#6c757d',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}
+      >
+        Cancel
+      </button>
+    </div>
+  </>
+)}
 
       {/* Lawyer Info Modal */}
       {showLawyerModal && selectedLawyer && (
@@ -231,7 +356,6 @@ const StartupDashboard = () => {
           </div>
         </div>
       )}
-
       <button
         onClick={() => navigate("/forum")}
         style={{
