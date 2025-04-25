@@ -14,31 +14,26 @@ public class LawyerController {
     @Autowired
     private LawyerService lawyerService;
 
-    // Get all lawyers
     @GetMapping
     public List<Lawyer> getAllLawyers() {
         return lawyerService.getAllLawyers();
     }
 
-    // Get a lawyer by its ID
     @GetMapping("/{id}")
     public Lawyer getLawyerById(@PathVariable Long id) {
         return lawyerService.getLawyerById(id);
     }
 
-    // Add a new lawyer
     @PostMapping
     public Lawyer addLawyer(@RequestBody Lawyer lawyer) {
         return lawyerService.createLawyer(lawyer);
     }
 
-    // Update an existing lawyer
     @PutMapping("/{id}")
     public Lawyer updateLawyer(@PathVariable Long id, @RequestBody Lawyer lawyer) {
         return lawyerService.updateLawyer(id, lawyer);
     }
 
-    // Delete a lawyer by its ID
     @DeleteMapping("/{id}")
     public void deleteLawyer(@PathVariable Long id) {
         lawyerService.deleteLawyer(id);

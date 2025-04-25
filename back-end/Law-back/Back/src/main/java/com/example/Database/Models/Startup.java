@@ -18,7 +18,6 @@ public class Startup extends User {
     @OneToMany(mappedBy = "startup", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 
-    // Getters and Setters
     public String getCompanyName() {
         return companyName;
     }

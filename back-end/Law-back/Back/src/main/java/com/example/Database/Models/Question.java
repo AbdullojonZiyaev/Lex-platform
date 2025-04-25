@@ -42,7 +42,6 @@ public class Question {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

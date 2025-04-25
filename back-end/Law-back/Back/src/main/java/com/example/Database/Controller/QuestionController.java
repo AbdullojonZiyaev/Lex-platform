@@ -64,17 +64,14 @@ public class QuestionController {
     @PostMapping
     public ResponseEntity<Question> createQuestion(@RequestBody Question question,
                                                    @RequestParam Long startupId) {
-        // Fetch the Startup from the database
         Optional<Startup> startupOpt = startupRepository.findById(startupId);
         if (startupOpt.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
         System.out.println(startupOpt);
-        // Set the startup and creation date
         question.setStartup(startupOpt.get());
         question.setCreatedAt(new Date());
 
-        // Delegate to service layer (or save directly)
         Question createdQuestion = questionService.createQuestion(question);
         return new ResponseEntity<>(createdQuestion, HttpStatus.CREATED);
     }

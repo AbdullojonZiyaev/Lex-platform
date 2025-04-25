@@ -26,24 +26,22 @@ public class AnswerController {
     private LawyerRepository lawyerRepository;
     @Autowired
     private QuestionRepository questionRepository;
-    // Get all answers
+
     @GetMapping
     public List<Answer> getAllAnswers() {
         return answerService.getAllAnswers();
     }
 
-    // Get an answer by its ID
     @GetMapping("/{id}")
     public Optional<Answer> getAnswerById(@PathVariable Long id) {
         return answerService.getAnswerById(id);
     }
 
-    // Get an answer by its ID
     @GetMapping("/lawyer/{id}")
     public List<Answer> getAnswerByLawyerId(@PathVariable Long id) {
         return answerService.getAnswerByLawyerId(id);
     }
-    // Get an answer by its ID
+
     @GetMapping("/question/{id}")
     public List<Answer> getAnswerByQuestionId(@PathVariable Long id) {
         return answerService.getAnswerByQuestionId(id);
@@ -77,14 +75,11 @@ public class AnswerController {
         }
     }
 
-
-    // Update an existing answer
     @PutMapping("/{id}")
     public Answer updateAnswer(@PathVariable Long id, @RequestBody Answer answer) {
         return answerService.updateAnswer(id, answer);
     }
 
-    // Delete an answer by its ID
     @DeleteMapping("/{id}")
     public void deleteAnswer(@PathVariable Long id) {
         answerService.deleteAnswer(id);

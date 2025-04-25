@@ -20,14 +20,12 @@ public class AuthService {
     private LawyerRepository lawyerRepo;
 
     public Map<String, Object> authenticate(String username, String password) {
-        // Try lawyer first
         Optional<Lawyer> lawyerOpt = lawyerRepo.findByUsername(username);
         if (lawyerOpt.isPresent() && lawyerOpt.get().getPassword().equals(password)) {
             Lawyer lawyer = lawyerOpt.get();
             return Map.of("id", lawyer.getId(), "userType", "lawyer");
         }
 
-        // Then try startup
         Optional<Startup> startupOpt = startupRepo.findByUsername(username);
         if (startupOpt.isPresent() && startupOpt.get().getPassword().equals(password)) {
             Startup startup = startupOpt.get();

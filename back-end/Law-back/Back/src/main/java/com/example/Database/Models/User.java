@@ -20,7 +20,6 @@ public abstract class User {
     @Column(name = "Password", nullable = false, length = 100)
     protected String password;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

@@ -17,7 +17,7 @@ public class Answer {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "question_id", referencedColumnName = "id")
-    private Question question; // Corrected reference to Question entity
+    private Question question;
 
     @Column(name = "Content", nullable = false, length = 1000)
     private String content;

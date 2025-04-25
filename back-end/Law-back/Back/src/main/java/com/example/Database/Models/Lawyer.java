@@ -12,7 +12,6 @@ public class Lawyer extends User {
     @Column(name = "Experience_Years")
     private int experienceYears;
 
-    // Getters and Setters
     public String getSpecialization() {
         return specialization;
     }
