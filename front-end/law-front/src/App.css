@@ -1,4 +1,12 @@
-* {
+:root {
+   --primary-green: #2e7d32;
+   --light-gray: #f0f4f8;
+   --dark-gray: #1f2937;
+   --accent-blue: #003366;
+   --text-color: #333;
+ }
+
+*{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -9,11 +17,4 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-footer {
-  background-color: #003366;
-  color: white;
-  text-align: center;
-  padding: 1rem;
 }

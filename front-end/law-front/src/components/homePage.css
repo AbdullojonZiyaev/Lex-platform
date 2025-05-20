@@ -1,0 +1,79 @@
+:root {
+  --primary-green: #2e7d32;
+  --light-gray: #f3f4f6;
+  --text-dark: #1f2937;
+}
+
+.homepage {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--light-gray);
+  color: var(--text-dark);
+  padding: 2rem;
+}
+
+.section {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.alt-bg {
+  background-color: #e8f5e9;
+}
+
+.section-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .section-content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .text {
+    flex: 1;
+    padding-right: 2rem;
+  }
+
+  .section-image {
+    flex: 1;
+    max-width: 400px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+}
+
+h2 {
+  color: var(--primary-green);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.testimonial {
+  margin-bottom: 1.5rem;
+  border-left: 4px solid var(--primary-green);
+  padding-left: 1rem;
+  font-style: italic;
+}
+
+.testimonial span {
+  display: block;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.faq h4 {
+  margin-top: 1rem;
+  color: var(--primary-green);
+}
+
+.faq p {
+  margin-bottom: 1rem;
+}

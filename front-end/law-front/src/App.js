@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./components/navbar";
 import Modal from "./components/modal";
-import Section from "./components/section";
+import HomePage from "./components/homePage"
+import Footer from "./components/footer"
 import LawyerSignup from "./register-lawyer/LawyerSignUp";
 import StartupSignup from "./register-startup/StartUpSignUp";
 import LawyerDashboard from "./dashboard/lawyer/lawyerDashboard";
@@ -27,9 +28,7 @@ function App() {
             path="/"
             element={
               <main>
-                <Section title="Welcome or Featured Q&A" />
-                <Section title="Latest Legal Questions" />
-                <Section title="Lawyer Highlights or Help Center" />
+                <HomePage/>
               </main>
             }
           />
@@ -41,7 +40,7 @@ function App() {
           <Route path="/login" element={<LoginForm />} />
         </Routes>
 
-        <footer>&copy; 2025 LawStart. All rights reserved.</footer>
+         <Footer/>
       </div>
     </Router>
   );

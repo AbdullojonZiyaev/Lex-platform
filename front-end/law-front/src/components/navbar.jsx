@@ -1,40 +1,53 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "./lawNavCSS.css";
 
-const NavBar = ({ openSignUpModal }) => {
-  return (
-    <nav style={styles.nav}>
-      <div style={styles.logo}>LawStart</div>
-      <div style={styles.navLinks}>
-        <a href="#">Home</a>
-        <Link to="/login">Log In</Link>
-        <a href="#" onClick={openSignUpModal}>Sign Up</a>
-        <a href="#">Contact Us</a>
+function NavItem({ text, to, onClick }) {
+  if (onClick) {
+    return (
+      <div className="nav-item" onClick={onClick}>
+        {text}
       </div>
-    </nav>
+    );
+  }
+
+  return (
+    <Link to={to} className="nav-item">
+      {text}
+    </Link>
   );
-};
+}
 
-const styles = {
-  nav: {
-    backgroundColor: "#003366",
-    color: "white",
-    padding: "1rem 2rem",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  logo: {
-    fontSize: "1.5rem",
-    fontWeight: "bold",
-  },
-  navLinks: {
-    display: "flex",
-    gap: "1rem",
-    color: "white",
-  },
-  a: {
-      color: "white"}
-};
+function LawStartNav({ openSignUpModal }) {
+  return (
+    <div className="navbar">
+      {/* Logo */}
+      <div className="navbar-logo">
+       {/* <img
+          loading="lazy"
+          src="/logo.png" // Replace with your real logo path
+          alt="LawStart Logo"
+          className="navbar-logo-img"
+        />*/}
+        <div className="navbar-title">LexPlatform</div>
+      </div>
 
-export default NavBar;
+      {/* Navigation Items */}
+      <nav className="navbar-links">
+        <NavItem text="Home" to="/" />
+        <NavItem text="Log In" to="/login" />
+        <NavItem text="Contact Us" to="/contact" />
+      </nav>
+
+      {/* Optional CTA */}
+      <button
+        className="navbar-button"
+        onClick={openSignUpModal}
+      >
+        Get Started
+      </button>
+    </div>
+  );
+}
+
+export default LawStartNav;
