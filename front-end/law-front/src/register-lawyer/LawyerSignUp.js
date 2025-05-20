@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import SuccessModal from "../components/successModal"; // Adjust path if needed
 import "./LawyerSignUp.css";
 
 const LawyerSignup = () => {
@@ -10,31 +12,68 @@ const LawyerSignup = () => {
     experienceYears: ""
   });
 
+  const [showSuccess, setShowSuccess] = useState(false);
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch("http://localhost:8080/lawyers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
-      });
+ const handleSubmit = async (e) => {
+   e.preventDefault();
+   try {
+     // Register user
+     const res = await fetch("http://localhost:8080/lawyers", {
+       method: "POST",
+       headers: { "Content-Type": "application/json" },
+       body: JSON.stringify({ ...formData, experienceYears: Number(formData.experienceYears) })
+     });
 
-      if (res.ok) {
-        alert("Registration successful!");
-        // Optionally redirect or clear form
-      } else {
-        alert("Failed to register. Try again.");
-      }
-    } catch (error) {
-      console.error("Error registering:", error);
-      alert("Server error. Try again later.");
-    }
-  };
+     if (!res.ok) {
+       alert("Failed to register. Try again.");
+       return; // <-- important to stop here
+     }
+
+     setShowSuccess(true);
+
+     // Auto login with same credentials
+     const loginRes = await fetch("http://localhost:8080/auth/login", {
+       method: "POST",
+       headers: { "Content-Type": "application/json" },
+       body: JSON.stringify({
+         username: formData.username,
+         password: formData.password
+       })
+     });
+
+     if (!loginRes.ok) {
+       alert("Registration succeeded but login failed. Please login manually.");
+       setShowSuccess(false);
+       return;
+     }
+
+     const data = await loginRes.json();
+
+     localStorage.setItem("id", data.id);
+     localStorage.setItem("userType", data.userType);
+
+     // Delay redirect so user sees success modal
+     setTimeout(() => {
+       setShowSuccess(false);
+       if (data.userType === "lawyer") {
+         navigate("/dashboard/lawyer");
+       } else {
+         navigate("/dashboard/startup");
+       }
+     }, 2000);
+
+   } catch (error) {
+     console.error("Error during registration/login:", error);
+     alert("Server error. Try again later.");
+   }
+ };
+
 
   return (
     <div className="signup-container">
@@ -69,6 +108,13 @@ const LawyerSignup = () => {
 
         <button type="submit">Register</button>
       </form>
+
+      {showSuccess && (
+        <SuccessModal
+          message="Registration successful! Redirecting to dashboard..."
+          onClose={() => setShowSuccess(false)}
+        />
+      )}
     </div>
   );
 };
